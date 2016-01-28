@@ -6,8 +6,8 @@ list_t list_create()
 {
 	list_t temp = malloc(sizeof(struct list));
 	temp->length = 0;
-	temp->head = 0;
-	temp->tail = 0;
+	temp->head = NULL;
+	temp->tail = NULL;
 	return temp;
 
 }
@@ -20,7 +20,6 @@ void list_delete(list_t list)
 		free(headPtr);
 		headPtr = temp;
 	}
-
 }
 
 void list_insert(list_t list, int index, int data)
@@ -39,24 +38,30 @@ void list_append(list_t list, int data)
         	exit(-1);
     	}    
 
-    	newNode->data = data;
-    	newNode->next = endNode;
-	newNode->prev = NULL;
+        // Set up list-head if the list is empty
+        if (!endNode){
+            list->head = newNode;
+        // Else point endNode to newNode
+        }else{
+            endNode->next = newNode;
+        }
 
-    	while (endNode->next) {
-        	endNode = endNode->next;
-    	}    
-    	endNode->prev = newNode;
+        // Append newNode
+    	newNode->data = data;
+    	newNode->next = NULL;
+	newNode->prev = endNode;
+
+        //Set list-tail
+        list->tail = newNode;
 }
 
 void list_print(list_t list)
 {
-	struct node *tempPointer = list->tail;
+	struct node *tempPointer = list->head;
 	while(tempPointer != NULL){
-		printf("%s", tempPointer->data);
+		printf("%d\n", tempPointer->data);
 		tempPointer = tempPointer->next;
 	}
-	printf("\n");
 }
 
 long list_sum(list_t list)
